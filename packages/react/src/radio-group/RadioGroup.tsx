@@ -74,11 +74,20 @@ export const RadioGroup = React.forwardRef(function RadioGroup(
     state: 'value',
   });
 
+  const controlRef = React.useRef<HTMLElement>(null);
+  const registerControlRef = useEventCallback((element: HTMLElement | null) => {
+    if (controlRef.current == null && element != null) {
+      controlRef.current = element;
+    }
+  });
+
   useField({
     id,
     commitValidation: fieldControlValidation.commitValidation,
     value: checkedValue,
-    controlRef: fieldControlValidation.inputRef,
+    controlRef,
+    name,
+    getValue: () => checkedValue ?? null,
   });
 
   const prevValueRef = React.useRef(checkedValue);
@@ -170,6 +179,7 @@ export const RadioGroup = React.forwardRef(function RadioGroup(
       name,
       onValueChange,
       readOnly,
+      registerControlRef,
       required,
       setCheckedValue,
       setTouched,
@@ -182,6 +192,7 @@ export const RadioGroup = React.forwardRef(function RadioGroup(
       name,
       onValueChange,
       readOnly,
+      registerControlRef,
       required,
       setCheckedValue,
       setTouched,
